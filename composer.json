@@ -1,0 +1,21 @@
+{
+  "name": "larry/dbvc",
+  "description": "database version control",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Larry Li",
+      "email": "nis131914@gmail.com"
+    }
+  ],
+  "require": {
+    "monolog/monolog": "^1.17"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lib\\": "Lib",
+      "Controller\\": "Controller",
+      "VCFiles\\": "VCFiles"
+    }
+  }
+}
