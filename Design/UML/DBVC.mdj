@@ -305,6 +305,34 @@
 											"text": "+comment()",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFSjLt15B08vVc=",
+											"_parent": {
+												"$ref": "AAAAAAFSd+gANKyDepA="
+											},
+											"model": {
+												"$ref": "AAAAAAFSjLt1ux05/oY="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;2",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 261,
+											"top": 301,
+											"width": 95.01171875,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+author()",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
 										}
 									],
 									"visible": true,
@@ -319,7 +347,7 @@
 									"left": 256,
 									"top": 251,
 									"width": 105.01171875,
-									"height": 53,
+									"height": 68,
 									"autoResize": false
 								},
 								{
@@ -383,7 +411,7 @@
 							"left": 256,
 							"top": 216,
 							"width": 105.01171875,
-							"height": 99,
+							"height": 103,
 							"autoResize": false,
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
@@ -1101,6 +1129,34 @@
 											"text": "+comment()",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFSjLyLSR1E12Q=",
+											"_parent": {
+												"$ref": "AAAAAAFSeAfTJbAdGvs="
+											},
+											"model": {
+												"$ref": "AAAAAAFSjLyLJB1BiU0="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 213,
+											"top": 469,
+											"width": 175.5634765625,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+author()",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
 										}
 									],
 									"visible": true,
@@ -1115,7 +1171,7 @@
 									"left": 208,
 									"top": 419,
 									"width": 185.5634765625,
-									"height": 53,
+									"height": 68,
 									"autoResize": false
 								},
 								{
@@ -1179,7 +1235,7 @@
 							"left": 208,
 							"top": 384,
 							"width": 185.5634765625,
-							"height": 88,
+							"height": 103,
 							"autoResize": false,
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
@@ -1237,7 +1293,7 @@
 									"containerChangeable": false,
 									"containerExtending": false,
 									"left": 289,
-									"top": 342,
+									"top": 344,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -1270,7 +1326,7 @@
 									"containerChangeable": false,
 									"containerExtending": false,
 									"left": 274,
-									"top": 341,
+									"top": 343,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -1303,7 +1359,7 @@
 									"containerChangeable": false,
 									"containerExtending": false,
 									"left": 318,
-									"top": 343,
+									"top": 345,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -1334,7 +1390,7 @@
 								"$ref": "AAAAAAFSeAfTJbAWzco="
 							},
 							"lineStyle": 1,
-							"points": "302:383;306:315",
+							"points": "302:383;306:319",
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
 							"showProperty": true,
@@ -2028,8 +2084,8 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 443,
-									"top": 437,
+									"left": 444,
+									"top": 440,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -2061,8 +2117,8 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 443,
-									"top": 452,
+									"left": 444,
+									"top": 455,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -2094,8 +2150,8 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 444,
-									"top": 407,
+									"left": 443,
+									"top": 411,
 									"width": 0,
 									"height": 13,
 									"autoResize": false,
@@ -2126,7 +2182,7 @@
 								"$ref": "AAAAAAFSeBAEorBjLSQ="
 							},
 							"lineStyle": 1,
-							"points": "495:428;394:428",
+							"points": "495:431;394:433",
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
 							"showProperty": true,
@@ -2462,6 +2518,34 @@
 									"subViews": [
 										{
 											"_type": "UMLOperationView",
+											"_id": "AAAAAAFSjL0xhB1Mh5s=",
+											"_parent": {
+												"$ref": "AAAAAAFSeCt23bFTVyM="
+											},
+											"model": {
+												"$ref": "AAAAAAFSjL0xXR1JzQ8="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 829,
+											"top": 496,
+											"width": 103,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+help()",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
 											"_id": "AAAAAAFSeC0dx7F6iec=",
 											"_parent": {
 												"$ref": "AAAAAAFSeCt23bFTVyM="
@@ -2479,7 +2563,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 829,
-											"top": 496,
+											"top": 511,
 											"width": 103,
 											"height": 13,
 											"autoResize": false,
@@ -2507,7 +2591,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 829,
-											"top": 511,
+											"top": 526,
 											"width": 103,
 											"height": 13,
 											"autoResize": false,
@@ -2535,7 +2619,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 829,
-											"top": 526,
+											"top": 541,
 											"width": 103,
 											"height": 13,
 											"autoResize": false,
@@ -2563,7 +2647,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 829,
-											"top": 541,
+											"top": 556,
 											"width": 103,
 											"height": 13,
 											"autoResize": false,
@@ -2591,7 +2675,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 829,
-											"top": 556,
+											"top": 571,
 											"width": 103,
 											"height": 13,
 											"autoResize": false,
@@ -2613,7 +2697,7 @@
 									"left": 824,
 									"top": 491,
 									"width": 113,
-									"height": 83,
+									"height": 98,
 									"autoResize": false
 								},
 								{
@@ -2677,7 +2761,7 @@
 							"left": 824,
 							"top": 456,
 							"width": 113,
-							"height": 118,
+							"height": 133,
 							"autoResize": false,
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
@@ -2934,9 +3018,9 @@
 							"left": 984,
 							"top": 488,
 							"width": 240,
-							"height": 55,
+							"height": 70,
 							"autoResize": false,
-							"text": "CLI方法簡易說明：\ncreate():建立一個新的版本檔案\n(其餘方法調用VCMnanager同名方法)",
+							"text": "CLI方法簡易說明：\nhelp():显示所有的命令列表\ncreate():建立一個新的版本檔案\n(其餘方法調用VCMnanager同名方法)",
 							"wordWrap": true
 						},
 						{
@@ -2985,7 +3069,7 @@
 								"$ref": "AAAAAAFSeCt23LFM8ZY="
 							},
 							"lineStyle": 1,
-							"points": "937:514;983:514"
+							"points": "937:522;983:522"
 						},
 						{
 							"_type": "UMLNoteView",
@@ -3005,9 +3089,9 @@
 							"left": 304,
 							"top": 88,
 							"width": 300.96630859375,
-							"height": 102,
+							"height": 115,
 							"autoResize": false,
-							"text": "BaseFunction(方法由子類實現)\nup():需要在此輸入提升版本需要實現的sql語句\ndown():需要在此輸入下降版本需要實現的sql語句\ncomment():回傳此次結構更新的註解\n\n注：每个up()和down()要加入事务回滚机制和log\n记录(log使用monolog包来实现)。",
+							"text": "BaseFunction(方法由子類實現)\nup():需要在此輸入提升版本需要實現的sql語句\ndown():需要在此輸入下降版本需要實現的sql語句\ncomment():回傳此次結構更新的註解\nauthor():回传此次结构更新的开发者\n注：每个up()和down()要加入事务回滚机制和log\n记录(log使用monolog包来实现)。",
 							"wordWrap": true
 						},
 						{
@@ -3032,7 +3116,7 @@
 								"$ref": "AAAAAAFSeEVrerIe1Qw="
 							},
 							"lineStyle": 1,
-							"points": "394:190;361:219"
+							"points": "384:203;361:222"
 						}
 					]
 				},
@@ -3129,6 +3213,20 @@
 								"$ref": "AAAAAAFSd+gAMqx6jDk="
 							},
 							"name": "comment",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": true
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFSjLt1ux05/oY=",
+							"_parent": {
+								"$ref": "AAAAAAFSd+gAMqx6jDk="
+							},
+							"name": "author",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
@@ -3317,6 +3415,20 @@
 								"$ref": "AAAAAAFSeAfTJbAUEUU="
 							},
 							"name": "comment",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFSjLyLJB1BiU0=",
+							"_parent": {
+								"$ref": "AAAAAAFSeAfTJbAUEUU="
+							},
+							"name": "author",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
@@ -3598,6 +3710,20 @@
 					"documentation": "Command-line interface",
 					"visibility": "public",
 					"operations": [
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFSjL0xXR1JzQ8=",
+							"_parent": {
+								"$ref": "AAAAAAFSeCt23LFKlDM="
+							},
+							"name": "help",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
 						{
 							"_type": "UMLOperation",
 							"_id": "AAAAAAFSeC0dorF3O5s=",
