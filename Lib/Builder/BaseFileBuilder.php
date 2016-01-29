@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: larry
- * Date: 2016/1/12
- * Time: 17:33
- */
 
 namespace Lib\Builder;
 
@@ -16,9 +10,11 @@ use Lib\Db\TableInfo;
  */
 class BaseFileBuilder
 {
-    public function __construct()
+    private $out_folder;
+    public function __construct($out_folder)
     {
-        $this->check_dir(OUT_FOLDER);
+        $this->out_folder = $out_folder;
+        $this->check_dir($this->out_folder);
     }
 
     /**
@@ -29,8 +25,8 @@ class BaseFileBuilder
     {
         $content = $this->make_content();
         $resulte = $this->write_file($content);
-        return $resulte;
 
+        return $resulte;
     }
 
     /**
@@ -61,7 +57,7 @@ class BaseFileBuilder
      */
     public function getOutFolder()
     {
-        return $this->outFolder;
+        return $this->out_folder;
     }
 
     /**
@@ -82,15 +78,16 @@ class BaseFileBuilder
     public function write_file($content)
     {
         $template_content = $this->get_template(dirname(__FILE__).DIRECTORY_SEPARATOR."template.php");
-        $lang_file_name = "VC_".time();
-        $fp = fopen(OUT_FOLDER.DIRECTORY_SEPARATOR.$lang_file_name.'.php', 'w');
-        $template_content = str_replace("{t:vc_file_name}",$lang_file_name,$template_content);
+        $file_name = "VC_".time();
+        $file_path = $this->out_folder.DIRECTORY_SEPARATOR.$file_name.'.php';
+        $fp = fopen($file_path, 'w');
+        $template_content = str_replace("{t:vc_file_name}",$file_name,$template_content);
 
         mb_convert_encoding($template_content, 'UTF-8');
         fwrite($fp, $template_content);
         fclose($fp);
 
-        return 1;
+        return $file_path;
     }
 
 }

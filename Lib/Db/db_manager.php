@@ -40,5 +40,5 @@ class db_manager
     {
         return self::$db_name;
     }
-    
+
 }

@@ -11,25 +11,25 @@ namespace VCFiles;
 
 use Lib\VersionControl\BaseFunction;
 
-class {t:vc_file_name} extends BaseFunction
+class VC_1454060274 extends BaseFunction
 {
     public function up()
     {
-        //TODO
+        return "CREATE TABLE `User` (`id`  int(20) UNSIGNED NOT NULL AUTO_INCREMENT ,PRIMARY KEY (`id`));";
     }
 
     public function down()
     {
-        //TODO
+        return "DROP TABLE `User`;";
     }
 
     public function comment()
     {
-        //TODO
+        return "版控测试1，新增使用者表单。";
     }
 
     public function author()
     {
-        //TODO
+        return "Larry.Li";
     }
 }
