@@ -55,6 +55,7 @@ class CLI
     public function test()
     {
         VCManager::get_instance();
+        VCManager::up();
     }
 
 }
