@@ -9,9 +9,8 @@ class VCManager
 {
     private static $_db;
     private static $_now_version;
-    private static $_late_version;
+    private static $_latest_version;
     private static $_instance;
-    private static $_run_vc_array;
 
     private function __construct()
     {
@@ -83,7 +82,7 @@ class VCManager
     private static function _setLateVersion()
     {
         $file_array = self::_getVersionFiles();
-        self::$_late_version = $file_array?(int)$file_array[count($file_array)-1]:0;
+        self::$_latest_version = $file_array?(int)$file_array[count($file_array)-1]:0;
     }
 
     /**
@@ -99,17 +98,6 @@ class VCManager
         return self::$_instance;
     }
 
-    public static function auto_update()
-    {
-
-    }
-
-    public static function init()
-    {
-
-    }
-
-
     /**
      * 检查版本是否存在於档案列表
      * @param $v_no
@@ -123,6 +111,11 @@ class VCManager
         return false;
     }
 
+
+    /**
+     * 取得错误讯息
+     * @param $error_no
+     */
     private static function _getError($error_no)
     {
         switch($error_no)
@@ -136,6 +129,10 @@ class VCManager
     }
 
 
+    /**
+     * 升级到指定的资料库结构版本，如果没有输入，预设上升一个版本
+     * @param int $v_no
+     */
     public static function up($v_no = 1)
     {
         if(!is_numeric($v_no))
@@ -213,18 +210,166 @@ class VCManager
 
     }
 
+    /**
+     * 将资料库版本下降到指定版本，当不输入时，预设降低一个版本
+     * @param int $v_no
+     */
     public static function down($v_no = 1)
     {
+        if(!is_numeric($v_no))
+        {
+            self::_getError(0);
+        }
+
+        if(!self::_checkVersionIsExist($v_no))
+        {
+            self::_getError(1);
+        }
+
+        $file_arr = self::_getVersionFiles();
+
+        $local_now_version = self::getNowVersion();
+
+        //取得正确的目标版本号
+        $local_now_version_key = array_search( $local_now_version,$file_arr);
+        if($local_now_version == 0 && $v_no == 1)//表示没有上一个版本
+        {
+            exit("Now is the first version!");
+        }
+        elseif($local_now_version > 0 && $v_no == 1)
+        {
+            $target_version = isset($file_arr[$local_now_version_key-1])?$file_arr[$local_now_version_key-1]:$file_arr[$local_now_version_key];
+        }
+        else{
+            $target_version = $v_no;
+        }
+
+        //过滤版本号必须小於等於本地资料库版本
+        $file_arr = array_filter($file_arr,function($versionNo) use ($local_now_version){
+            return $versionNo <= $local_now_version;
+        });
+
+        //正常情况过滤版本号必须大於目标版本。但当本地版本将目标版本一极时，则过滤版本号要等於目标版本
+        $file_arr = array_filter($file_arr,function($versionNo) use ($target_version,$local_now_version,$v_no){
+            if($v_no==0)return $versionNo >= $target_version;
+            if($target_version==$local_now_version)return $versionNo == $target_version;
+            return $versionNo > $target_version;
+        });
+
+        krsort($file_arr);
+
+        //执行资料库结构更新程序
+        foreach($file_arr as $key => $value)
+        {
+            $version_class_name = "VCFiles\\VC_{$value}";
+            $version_file = new $version_class_name();
+            $result = self::$_db->query($version_file->down());
+            if($result)
+            {
+                $sql = "DELETE FROM db_vc WHERE vc_file = '{$value}';";
+                $dbvc_log = self::$_db->query($sql);
+                if($dbvc_log)
+                {
+                    echo "Version:{$value} down success!\n";
+                }
+                else
+                {
+                    self::_getError(3);
+                }
+            }
+            else
+            {
+                self::_getError(2);
+            }
+
+        }
 
     }
 
+    /**
+     * 更新到开发最新版本
+     */
+    public static function auto_update()
+    {
+        $latest_version = self::getLatestVersion();
+        self::up($latest_version);
+    }
 
+    /**
+     * 将资料库结构的版本还原到引入版控前的状态
+     */
+    public static function init()
+    {
+
+        $file_arr = self::_getVersionFiles();
+
+        $local_now_version = self::getNowVersion();
+
+        //取得正确的目标版本号
+        $target_version = $file_arr[0];
+
+
+        //过滤版本号必须小於等於本地资料库版本
+        $file_arr = array_filter($file_arr,function($versionNo) use ($local_now_version){
+            return $versionNo <= $local_now_version;
+        });
+
+        //正常情况过滤版本号必须大於目标版本。但当本地版本将目标版本一极时，则过滤版本号要等於目标版本
+        $file_arr = array_filter($file_arr,function($versionNo) use ($target_version){
+            return $versionNo >= $target_version;
+        });
+
+        krsort($file_arr);
+
+        //执行资料库结构更新程序
+        foreach($file_arr as $key => $value)
+        {
+            $version_class_name = "VCFiles\\VC_{$value}";
+            $version_file = new $version_class_name();
+            $result = self::$_db->query($version_file->down());
+            if($result)
+            {
+                $sql = "DELETE FROM db_vc WHERE vc_file = '{$value}';";
+                $dbvc_log = self::$_db->query($sql);
+                if($dbvc_log)
+                {
+                    echo "Version:{$value} down success!\n";
+                }
+                else
+                {
+                    self::_getError(3);
+                }
+            }
+            else
+            {
+                self::_getError(2);
+            }
+
+        }
+    }
+
+
+    /**
+     * 取得目前本地版本
+     * @return mixed
+     */
     public static function getNowVersion()
     {
         return self::$_now_version;
     }
+
+    /**
+     * 取得开发最新版本
+     * @return mixed
+     */
     public static function getLatestVersion()
     {
-        return self::$_late_version;
+        return self::$_latest_version;
+    }
+
+    public static function getVersionList()
+    {
+        $list = self::_getVersionFiles();
+        return $list;
     }
 }
