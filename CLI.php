@@ -89,5 +89,12 @@ class CLI
 
 $cli = new CLI();
 $command = $argv[1];
+if(!method_exists($cli,$command)){
+    exit("I don't know '{$command}' command. Maybe you can use 'help' to get command list.");
+}
+
 $field = isset($argv[2]) ? $argv[2] : null;
 call_user_func(array($cli, $command), $field);
+
+
+
