@@ -3,13 +3,21 @@
 namespace Controller;
 
 
+use Lib\Db\DBManager;
 use Lib\VersionControl\VCManager;
 
 class AdminController
 {
+
+    public function __construct()
+    {
+        VCManager::get_instance();
+    }
+
     public function dbvc_list()
     {
-
+        $result = VCManager::getVersionFiles();
+        echo json_encode($result);
     }
 
     public function auto_update()

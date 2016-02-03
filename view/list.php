@@ -7,7 +7,7 @@
     <meta name="keywords" content="">
     <meta name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Larry TTO</title>
+    <title>Larry DBVC</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
@@ -25,13 +25,27 @@
 </head>
 <body>
 
-<h1 class="am-animation-slide-left am-animation-delay-1">Larry TTO 資料庫表格轉換物件工具</h1>
+<h1 class="am-animation-slide-left am-animation-delay-1">Larry DBVC 多人開發資料庫結構版控解決方案</h1>
 
-<table class="am-table am-table-bordered am-table-radius">
+<div data-am-sticky>
+    <div class="am-btn-group am-animation-slide-top">
+        <button type="button" class="am-btn am-btn-primary am-round"
+                data-am-popover="{theme: 'warning sm',content: '將資料庫版本還原到引入版本之前的結構', trigger: 'hover focus'}">初始化
+        </button>
+        <button type="button" class="am-btn am-btn-primary am-round"
+                data-am-popover="{theme: 'warning sm',content: '自動更新至最新的開發版本', trigger: 'hover focus'}">自動更新
+        </button>
+    </div>
+</div>
+<hr>
+<table class="am-table am-table-bordered am-table-radius am-animation-slide-top">
     <thead>
     <tr>
-        <th>表格名稱</th>
-        <th>注釋</th>
+        <th>版本號</th>
+        <th>建立日期</th>
+        <th>寫入日期</th>
+        <th>開發者</th>
+        <th>註解</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -73,14 +87,28 @@
 
 <script type="text/javascript">
     $(function () {
+
+        var datetimefmt = function (timestamp) {
+            if(timestamp == ''){
+                return "<span style='color:red' >尚未寫入</span>";
+            }
+            var d = new Date(timestamp * 1000),
+                dformat = [d.getFullYear(),
+                        (d.getMonth() + 1),
+                        d.getDate()].join('/') + ' ' +
+                    [d.getHours(),
+                        d.getMinutes(),
+                        d.getSeconds()].join(':');
+            return dformat;
+        }
         var progress = $.AMUI.progress;
         progress.start();
-        $.getJSON('', {handle: "GetDbInfo"}, function (json, textStatus) {
+        $.getJSON('', {c: "Admin", f: "dbvc_list"}, function (json, textStatus) {
             var tableinfo = "";
             $.each(json, function (index, val) {
-                var select = "<select multiple data-am-selected id='"+val['TABLE_NAME']+"_select"+"'><option value='gethtml'>產生HTML</option><option value='getlanguage'>產生語言檔</option><option value='getcontrol'>產生控制器</option></select>";
-                var button = "<button type='button' id = '"+val['TABLE_NAME']+"' class='am-btn am-btn-primary btn-loading-example' data-am-loading=\"{loadingText: '檔案建立...'}\">執行</button>";
-                tableinfo += "<tr><td>" + val['TABLE_NAME'] + "</td><td>" + val['TABLE_COMMENT'] + "</td><td>" + select + button + "</td></tr>";
+                var up = "<button type='button' id = '" + val['vc_file'] + "' class='am-btn am-btn-primary am-round btn-loading-example'><span class='am-icon-arrow-up'></span></button>";
+                var down = "<button type='button' id = '" + val['vc_file'] + "' class='am-btn am-btn-primary am-round btn-loading-example'><span class='am-icon-arrow-down'></button>";
+                tableinfo += "<tr><td>VC_" + val['vc_file'] + "</td><td>" + datetimefmt(val['vc_file']) + "</td><td>" + datetimefmt(val['create_date']) + "</td><td>" + val['create_author'] + "</td><td>" + val['v_comment'] + "</td><td><div class='am-btn-group'>" + up + down + "</div></td></tr>";
             });
             $('tbody').append(tableinfo);
 
@@ -93,10 +121,10 @@
             //執行按鈕
             $('.btn-loading-example').click(function () {
                 var tableName = $(this).attr("id");
-                var $checkLi = $("#"+tableName+"_select").next().find("li.am-checked");
+                var $checkLi = $("#" + tableName + "_select").next().find("li.am-checked");
                 var builderArr = new Array();
 
-                $.each($checkLi,function(index,element){
+                $.each($checkLi, function (index, element) {
                     var builderMethod = {};
                     var $e = $(element);
                     builderMethod.name = $e.attr("data-value");
@@ -105,10 +133,14 @@
 
                 var $btn = $('.btn-loading-example');
                 $btn.button('loading');
-                $.getJSON("", {handle: 'RunBuilder', table_name: tableName, runMethod:JSON.stringify(builderArr)}, function (json, textStatus) {
-                    if(json.result){
+                $.getJSON("", {
+                    handle: 'RunBuilder',
+                    table_name: tableName,
+                    runMethod: JSON.stringify(builderArr)
+                }, function (json, textStatus) {
+                    if (json.result) {
                         $('#doc-modal-success').modal();
-                    }else{
+                    } else {
                         $('#doc-modal-fail').modal();
                     }
                     $btn.button('reset');

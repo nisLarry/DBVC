@@ -19,14 +19,53 @@ class VCManager
 
 
     /**
-     * 取得档案列表
+     * 取得档案名稱列表
      * @return array|bool\
      */
-    private static function _getVersionFiles()
+    private static function _getVersionFileNames()
     {
         $file_path = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "VCFiles";
         $file_array = self::_scan_dir($file_path);
         return $file_array;
+    }
+
+    /**
+     * 取得版本詳細列表
+     * @return array
+     */
+    public static function getVersionFiles()
+    {
+        $version_list=array();
+        $database_list = array();
+        $file_arr = self::_getVersionFileNames();
+        foreach ($file_arr as $key => $value) {
+            $version_class_name = "VCFiles\\VC_{$value}";
+            $version_file = new $version_class_name();
+            $version_list[$value]=array("vc_file"=>$value,"create_date"=>"","create_author"=>$version_file->author(),"v_comment"=>$version_file->comment());
+        }
+
+        $database_arr = DBManager::selectSql("select * from db_vc;");
+        foreach ($database_arr as $key => $value) {
+            $database_list[$value['vc_file']]=array("vc_file"=>$value['vc_file'],"create_date"=>$value['create_date'],"create_author"=>$value['create_author'],"v_comment"=>$value['v_comment']);
+        }
+
+        $database_key_arry = array_keys($database_list);
+
+        $merge = array_map(function($key)use($database_key_arry,$version_list,$database_list){
+
+            if(in_array($key,$database_key_arry))
+            {
+                return $database_list[$key];
+            }
+            else
+            {
+                return $version_list[$key];
+            }
+
+        },array_keys($version_list));
+
+        return $merge;
+
     }
 
     /**
@@ -63,7 +102,7 @@ class VCManager
      */
     private static function _setLateVersion()
     {
-        $file_array = self::_getVersionFiles();
+        $file_array = self::_getVersionFileNames();
         self::$_latest_version = $file_array ? (int)$file_array[count($file_array) - 1] : 0;
     }
 
@@ -90,7 +129,7 @@ class VCManager
         if ($v_no == 1) {
             return true;
         }
-        $file_arr = self::_getVersionFiles();
+        $file_arr = self::_getVersionFileNames();
         if (in_array($v_no, $file_arr)) {
             return true;
         }
@@ -138,7 +177,7 @@ class VCManager
             self::_getError(1);
         }
 
-        $file_arr = self::_getVersionFiles();
+        $file_arr = self::_getVersionFileNames();
 
         $local_now_version = self::getNowVersion();
 
@@ -205,7 +244,7 @@ class VCManager
             self::_getError(1);
         }
 
-        $file_arr = self::_getVersionFiles();
+        $file_arr = self::_getVersionFileNames();
 
         $local_now_version = self::getNowVersion();
 
@@ -274,7 +313,7 @@ class VCManager
     public static function init()
     {
 
-        $file_arr = self::_getVersionFiles();
+        $file_arr = self::_getVersionFileNames();
 
         $local_now_version = self::getNowVersion();
 
@@ -339,7 +378,7 @@ class VCManager
      */
     public static function getVersionList()
     {
-        $list = self::_getVersionFiles();
+        $list = self::_getVersionFileNames();
         return $list;
     }
 }

@@ -8,8 +8,10 @@ if (empty($_GET)) {
     include 'view/list.php';
 }
 
-if (isset($_GET['handle'])) {
-    $handle = $_GET['handle'];
-    include "Controller/{$handle}Handle.php";
+if (isset($_GET['c']) && isset($_GET['f'])) {
+    $controllerName = "\\Controller\\{$_GET['c']}Controller";
+    $controller = new $controllerName();
+    $funName = trim($_GET['f']);
+    call_user_func(array($controller,$funName));
 }
 

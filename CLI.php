@@ -85,6 +85,11 @@ class CLI
         }
     }
 
+    public function  test()
+    {
+        VCManager::test();
+    }
+
 }
 
 $cli = new CLI();
