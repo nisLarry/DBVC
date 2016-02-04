@@ -5,18 +5,45 @@ namespace Lib\VersionControl;
 
 use Lib\Db\DBManager;
 
+
+/**
+ * 錯誤訊息標示
+ * Class VCErrorMsg
+ * @package Lib\VersionControl
+ */
+abstract class VCErrorMsg
+{
+    const VERSION_NUMBER_IS_NOT_NUMBER = "VERSION_NUMBER_IS_NOT_NUMBER";
+    const VERSION_NUMBER_IS_NOT_EXIST = "VERSION_NUMBER_IS_NOT_EXIST";
+    const UPDATE_FAIL = "UPDATE_FAIL";
+    const SAVE_DBVC_LOG_FAIL = "SAVE_DBVC_LOG_FAIL";
+    const DOT_KNOW_ERROR = "DOT_KNOW_ERROR";
+    const IS_LATEST_VERSION = "IS_LATEST_VERSION";
+}
+
+/**
+ * 版本控制管理器
+ * Class VCManager
+ * @package Lib\VersionControl
+ */
 class VCManager
 {
     private static $_now_version;
     private static $_latest_version;
     private static $_instance;
+    private static $_message = array();
 
     private function __construct()
     {
         $this->_setNowVersion();
         $this->_setLateVersion();
+        $this->_setMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_NUMBER, 0, "This version number is not number.\n")
+            ->_setMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_EXIST, 0, "This version number is not exist.\n")
+            ->_setMessage(VCErrorMsg::UPDATE_FAIL, 0, "Update fail!.\n")
+            ->_setMessage(VCErrorMsg::SAVE_DBVC_LOG_FAIL, 0, "Save dbvc_log fail!.\n")
+            ->_setMessage(VCErrorMsg::DOT_KNOW_ERROR, 0, "I don't know this error.\n")
+            ->_setMessage(VCErrorMsg::IS_LATEST_VERSION, 0, "Now is the latest version!\n");
     }
-
 
     /**
      * 取得档案名稱列表
@@ -35,34 +62,41 @@ class VCManager
      */
     public static function getVersionFiles()
     {
-        $version_list=array();
+        $version_list = array();
         $database_list = array();
         $file_arr = self::_getVersionFileNames();
         foreach ($file_arr as $key => $value) {
             $version_class_name = "VCFiles\\VC_{$value}";
             $version_file = new $version_class_name();
-            $version_list[$value]=array("vc_file"=>$value,"create_date"=>"","create_author"=>$version_file->author(),"v_comment"=>$version_file->comment());
+            $version_list[$value] = array(
+                "vc_file" => $value,
+                "create_date" => "",
+                "create_author" => $version_file->author(),
+                "v_comment" => $version_file->comment()
+            );
         }
 
         $database_arr = DBManager::selectSql("select * from db_vc;");
         foreach ($database_arr as $key => $value) {
-            $database_list[$value['vc_file']]=array("vc_file"=>$value['vc_file'],"create_date"=>$value['create_date'],"create_author"=>$value['create_author'],"v_comment"=>$value['v_comment']);
+            $database_list[$value['vc_file']] = array(
+                "vc_file" => $value['vc_file'],
+                "create_date" => $value['create_date'],
+                "create_author" => $value['create_author'],
+                "v_comment" => $value['v_comment']
+            );
         }
 
         $database_key_arry = array_keys($database_list);
 
-        $merge = array_map(function($key)use($database_key_arry,$version_list,$database_list){
+        $merge = array_map(function ($key) use ($database_key_arry, $version_list, $database_list) {
 
-            if(in_array($key,$database_key_arry))
-            {
+            if (in_array($key, $database_key_arry)) {
                 return $database_list[$key];
-            }
-            else
-            {
+            } else {
                 return $version_list[$key];
             }
 
-        },array_keys($version_list));
+        }, array_keys($version_list));
 
         return $merge;
 
@@ -138,28 +172,27 @@ class VCManager
 
 
     /**
-     * 取得错误讯息
-     * @param $error_no
+     * 設置訊息
+     * @param string $messageName 訊息標示
+     * @param $status $訊息狀態
+     * @param $message $訊息主體
+     * @return $this
      */
-    private static function _getError($error_no)
+    private function _setMessage($messageName, $status, $message)
     {
-        switch ($error_no) {
-            case 0:
-                exit("This version number is not number.\n");
-                break;
-            case 1:
-                exit("This version number is not exist.\n");
-                break;
-            case 2:
-                exit("Update fail!.\n");
-                break;
-            case 3:
-                exit("Save dbvc_log fail!.\n");
-                break;
-            default:
-                exit("I don't know this error.\n");
-                break;
-        }
+        self::$_message[$messageName] = array($status, $message);
+        return $this;
+    }
+
+
+    /**
+     * 獲取訊息
+     * @param string $messageName 訊息標示
+     * @return mixed
+     */
+    private static function _getMessage($messageName)
+    {
+        return self::$_message[$messageName];
     }
 
 
@@ -169,12 +202,14 @@ class VCManager
      */
     public static function up($v_no = 1)
     {
+        $return_message = array();
+
         if (!is_numeric($v_no)) {
-            self::_getError(0);
+            return array(self::_getMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_NUMBER));
         }
 
         if (!self::_checkVersionIsExist($v_no)) {
-            self::_getError(1);
+            return array(self::_getMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_EXIST));
         }
 
         $file_arr = self::_getVersionFileNames();
@@ -204,7 +239,7 @@ class VCManager
 
         //检查当前的版本是否为开发最新版本
         if (empty($file_arr)) {
-            exit("Now is the latest version!");
+            return array(self::_getMessage(VCErrorMsg::IS_LATEST_VERSION));
         }
 
 
@@ -218,16 +253,17 @@ class VCManager
                 $sql = "INSERT INTO db_vc(vc_file,create_date,create_author,v_comment) VALUES('{$value}','{$time}','{$version_file->author()}','{$version_file->comment()}');";
                 $dbvc_log = DBManager::updateSql($sql);
                 if ($dbvc_log) {
-                    echo "Version:{$value} update success!\n";
+                    self::_setNowVersion();
+                    $return_message[] = array(1, "Version:{$value} update success!\n");
                 } else {
-                    self::_getError(3);
+                    $return_message[] = self::_getMessage(VCErrorMsg::SAVE_DBVC_LOG_FAIL);
                 }
             } else {
-                self::_getError(2);
+                $return_message[] = self::_getMessage(VCErrorMsg::UPDATE_FAIL);
             }
 
         }
-
+        return $return_message;
     }
 
     /**
@@ -236,12 +272,14 @@ class VCManager
      */
     public static function down($v_no = 1)
     {
+        $return_message = array();
+
         if (!is_numeric($v_no)) {
-            self::_getError(0);
+            return self::_getMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_NUMBER);
         }
 
         if (!self::_checkVersionIsExist($v_no)) {
-            self::_getError(1);
+            return self::_getMessage(VCErrorMsg::VERSION_NUMBER_IS_NOT_EXIST);
         }
 
         $file_arr = self::_getVersionFileNames();
@@ -252,7 +290,7 @@ class VCManager
         $local_now_version_key = array_search($local_now_version, $file_arr);
         if ($local_now_version == 0 && $v_no == 1)//表示没有上一个版本
         {
-            exit("Now is the first version!");
+            return self::_getMessage(VCErrorMsg::IS_LATEST_VERSION);
         } elseif ($local_now_version > 0 && $v_no == 1) {
             $target_version = isset($file_arr[$local_now_version_key - 1]) ? $file_arr[$local_now_version_key - 1] : $file_arr[$local_now_version_key];
         } else {
@@ -286,16 +324,17 @@ class VCManager
                 $sql = "DELETE FROM db_vc WHERE vc_file = '{$value}';";
                 $dbvc_log = DBManager::updateSql($sql);
                 if ($dbvc_log) {
-                    echo "Version:{$value} down success!\n";
+                    self::_setNowVersion();
+                    $return_message[] = array(1, "Version:{$value} down success!\n");
                 } else {
-                    self::_getError(3);
+                    $return_message[] = self::_getMessage(VCErrorMsg::SAVE_DBVC_LOG_FAIL);
                 }
             } else {
-                self::_getError(2);
+                $return_message[] = self::_getMessage(VCErrorMsg::UPDATE_FAIL);
             }
 
         }
-
+        return $return_message;
     }
 
     /**
@@ -304,7 +343,9 @@ class VCManager
     public static function auto_update()
     {
         $latest_version = self::getLatestVersion();
-        self::up($latest_version);
+        $result = self::up($latest_version);
+        return $result;
+
     }
 
     /**
@@ -312,6 +353,8 @@ class VCManager
      */
     public static function init()
     {
+
+        $return_message = array();
 
         $file_arr = self::_getVersionFileNames();
 
@@ -342,15 +385,17 @@ class VCManager
                 $sql = "DELETE FROM db_vc WHERE vc_file = '{$value}';";
                 $dbvc_log = DBManager::updateSql($sql);
                 if ($dbvc_log) {
-                    echo "Version:{$value} down success!\n";
+                    self::_setNowVersion();
+                    $return_message[] = array(1, "Version:{$value} down success!\n");
                 } else {
-                    self::_getError(3);
+                    $return_message[] = self::_getMessage(VCErrorMsg::SAVE_DBVC_LOG_FAIL);
                 }
             } else {
-                self::_getError(2);
+                $return_message[] = self::_getMessage(VCErrorMsg::UPDATE_FAIL);
             }
 
         }
+        return $return_message;
     }
 
 

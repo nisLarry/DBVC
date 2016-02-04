@@ -29,16 +29,24 @@
 
 <div data-am-sticky>
     <div class="am-btn-group am-animation-slide-top">
-        <button type="button" class="am-btn am-btn-primary am-round"
-                data-am-popover="{theme: 'warning sm',content: '將資料庫版本還原到引入版本之前的結構', trigger: 'hover focus'}">初始化
+        <button type="button" class="am-btn am-btn-primary am-round btn-submit-init"
+                data-am-popover="{theme: 'warning sm',content: '將資料庫版本還原到引入版本之前的結構', trigger: 'hover focus'}"
+                data-am-modal="{target: '#modal-handling'}">初始化
         </button>
-        <button type="button" class="am-btn am-btn-primary am-round"
-                data-am-popover="{theme: 'warning sm',content: '自動更新至最新的開發版本', trigger: 'hover focus'}">自動更新
+        <button type="button" class="am-btn am-btn-primary am-round btn-submit-auto_update"
+                data-am-popover="{theme: 'warning sm',content: '自動更新至最新的開發版本', trigger: 'hover focus'}"
+                data-am-modal="{target: '#modal-handling'}">自動更新
         </button>
+        <button type="button" id="1454060274" class="am-btn am-btn-primary am-round btn-submit-up"
+                data-am-popover="{theme: 'warning sm',content: '上升一個版本', trigger: 'hover focus'}"
+                data-am-modal="{target: '#modal-handling'}"><span class="am-icon-arrow-up"></span></button>
+        <button type="button" id="1454060274" class="am-btn am-btn-primary am-round btn-submit-down"
+                data-am-popover="{theme: 'warning sm',content: '下降一個版本', trigger: 'hover focus'}"
+                data-am-modal="{target: '#modal-handling'}"><span class="am-icon-arrow-down"></span></button>
     </div>
 </div>
 <hr>
-<table class="am-table am-table-bordered am-table-radius am-animation-slide-top">
+<table id="versionTable" class="am-table am-table-bordered am-table-radius am-animation-slide-top">
     <thead>
     <tr>
         <th>版本號</th>
@@ -46,10 +54,22 @@
         <th>寫入日期</th>
         <th>開發者</th>
         <th>註解</th>
-        <th>操作</th>
     </tr>
     </thead>
     <tbody></tbody>
+</table>
+<hr>
+<table id="updateMessage" class="am-table am-table-bordered am-table-radius am-table-striped">
+    <thead>
+    <tr>
+        <th>訊息</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+    </tr>
+    </tbody>
 </table>
 
 <footer class="am-margin-top">
@@ -58,24 +78,13 @@
         <small>by Larry Li.</small>
     </p>
 </footer>
-<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-success">
+<div class="am-modal am-modal-alert" tabindex="-1" id="modal-handling">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd">建立完成
+        <div id="modal-title" class="am-modal-hd">處理中
             <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
         </div>
-        <div class="am-modal-bd">
-            檔案建立完成，請至<h2 style="color:red">\Out</h2>資料夾取得您的檔案！
-        </div>
-    </div>
-</div>
-
-<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-fail">
-    <div class="am-modal-dialog">
-        <div class="am-modal-hd">建立失敗
-            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-        </div>
-        <div class="am-modal-bd">
-            <h2 style="color:red">發生了未預期的錯誤！</h2>
+        <div id="modal-body" class="am-modal-bd">
+            <i class="am-icon-spinner am-icon-spin am-icon-lg"></i>
         </div>
     </div>
 </div>
@@ -88,8 +97,9 @@
 <script type="text/javascript">
     $(function () {
 
+        //timestamp時間格式化
         var datetimefmt = function (timestamp) {
-            if(timestamp == ''){
+            if (timestamp == '') {
                 return "<span style='color:red' >尚未寫入</span>";
             }
             var d = new Date(timestamp * 1000),
@@ -100,55 +110,61 @@
                         d.getMinutes(),
                         d.getSeconds()].join(':');
             return dformat;
-        }
-        var progress = $.AMUI.progress;
-        progress.start();
-        $.getJSON('', {c: "Admin", f: "dbvc_list"}, function (json, textStatus) {
-            var tableinfo = "";
-            $.each(json, function (index, val) {
-                var up = "<button type='button' id = '" + val['vc_file'] + "' class='am-btn am-btn-primary am-round btn-loading-example'><span class='am-icon-arrow-up'></span></button>";
-                var down = "<button type='button' id = '" + val['vc_file'] + "' class='am-btn am-btn-primary am-round btn-loading-example'><span class='am-icon-arrow-down'></button>";
-                tableinfo += "<tr><td>VC_" + val['vc_file'] + "</td><td>" + datetimefmt(val['vc_file']) + "</td><td>" + datetimefmt(val['create_date']) + "</td><td>" + val['create_author'] + "</td><td>" + val['v_comment'] + "</td><td><div class='am-btn-group'>" + up + down + "</div></td></tr>";
-            });
-            $('tbody').append(tableinfo);
+        };
 
-            //選擇器
-            $('select').selected({
-                btnWidth: '300px',
-                placeholder: '請選擇想要的操作…'
-            });
+        //判斷當前版本高亮顯示
+        var nowVersionHighLight = function (nowVersion, VersionNumber) {
+            if (nowVersion == VersionNumber) {
+                return 'am-active';
+            }
+        };
 
-            //執行按鈕
-            $('.btn-loading-example').click(function () {
-                var tableName = $(this).attr("id");
-                var $checkLi = $("#" + tableName + "_select").next().find("li.am-checked");
-                var builderArr = new Array();
-
-                $.each($checkLi, function (index, element) {
-                    var builderMethod = {};
-                    var $e = $(element);
-                    builderMethod.name = $e.attr("data-value");
-                    builderArr.push(builderMethod);
-                });
-
-                var $btn = $('.btn-loading-example');
-                $btn.button('loading');
-                $.getJSON("", {
-                    handle: 'RunBuilder',
-                    table_name: tableName,
-                    runMethod: JSON.stringify(builderArr)
-                }, function (json, textStatus) {
-                    if (json.result) {
-                        $('#doc-modal-success').modal();
-                    } else {
-                        $('#doc-modal-fail').modal();
+        //事件綁定
+        var eventBind = function (method) {
+            $(".btn-submit-" + method).on("click", function (event) {
+                var $modal = $('#modal-handling');
+                var $messageTable = $('#updateMessage');
+                $.getJSON('', {c: "Admin", f: method}, function (json, textStatus) {
+                    var message = "";
+                    for (var i = 0; i < json.length; i++) {
+                        if (json[i][0] == 1) {
+                            message = "<tr class ='am-animation-slide-left'><td><span style='color:blue'>" + json[i][1] + "</span></td></tr>";
+                        } else {
+                            message = "<tr class ='am-animation-slide-left'><td><span style='color:red'>" + json[i][1] + "</span></td></tr>";
+                        }
+                        $messageTable.find('tbody').prepend(message);
                     }
-                    $btn.button('reset');
+                    $('#versionTable').trigger('reload');
+                    $modal.modal('close');
                 })
+            })
+        };
 
+        //自訂重新載入事件
+        $('#versionTable').on('reload', function (event) {
+            progress.start();
+            $.getJSON('', {c: "Admin", f: "dbvc_list"}, function (json, textStatus) {
+                var tableinfo = "";
+                $.each(json.vList, function (index, val) {
+                    tableinfo += "<tr class='" + nowVersionHighLight(json.nowVersion, val['vc_file']) + "'><td>VC_" + val['vc_file'] + "</td><td>" + datetimefmt(val['vc_file']) + "</td><td>" + datetimefmt(val['create_date']) + "</td><td>" + val['create_author'] + "</td><td>" + val['v_comment'] + "</td></tr>";
+                });
+                $('#versionTable').find('tbody').html(tableinfo);
+                progress.done();
             });
-            progress.done();
         });
+
+
+        var progress = $.AMUI.progress;
+
+
+        $('#versionTable').trigger('reload');
+
+
+        eventBind('init');
+        eventBind('auto_update');
+        eventBind('up');
+        eventBind('down');
+
 
     });
 </script>

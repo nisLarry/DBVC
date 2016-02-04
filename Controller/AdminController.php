@@ -16,28 +16,33 @@ class AdminController
 
     public function dbvc_list()
     {
-        $result = VCManager::getVersionFiles();
+        $result['vList'] = VCManager::getVersionFiles();
+        $result['nowVersion']=VCManager::getNowVersion();
         echo json_encode($result);
     }
 
     public function auto_update()
     {
-        VCManager::auto_update();
+        $result = VCManager::auto_update();
+        echo json_encode($result);
     }
 
     public function init()
     {
-        VCManager::init();
+        $result = VCManager::init();
+        echo json_encode($result);
     }
 
-    public function up($vo_no)
+    public function up()
     {
-        VCManager::up($vo_no);
+        $result = VCManager::up();
+        echo json_encode($result);
     }
 
-    public function down($vo_no)
+    public function down()
     {
-        VCManager::down($vo_no);
+        $result = VCManager::down();
+        echo json_encode($result);
     }
 
 

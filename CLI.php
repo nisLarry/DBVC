@@ -12,6 +12,14 @@ class CLI
         VCManager::get_instance();
     }
 
+    private function _showMessage($result)
+    {
+        foreach($result as $key => $value)
+        {
+            echo $value[1];
+        }
+    }
+
     public function create()
     {
         $builder = new BaseFileBuilder('VCFiles');
@@ -20,12 +28,14 @@ class CLI
 
     public function auto_update()
     {
-        VCManager::auto_update();
+        $result = VCManager::auto_update();
+        $this->_showMessage($result);
     }
 
     public function init()
     {
-        VCManager::init();
+        $result = VCManager::init();
+        $this->_showMessage($result);
     }
 
     public function up($v_no = 1)
@@ -33,7 +43,8 @@ class CLI
         if ($v_no == null) {
             $v_no = 1;
         }
-        VCManager::up($v_no);
+        $result = VCManager::up($v_no);
+        $this->_showMessage($result);
     }
 
     public function down($v_no = 1)
@@ -41,7 +52,8 @@ class CLI
         if ($v_no == null) {
             $v_no = 1;
         }
-        VCManager::down($v_no);
+        $result = VCManager::down($v_no);
+        $this->_showMessage($result);
     }
 
     public function help()
@@ -70,31 +82,21 @@ class CLI
 
         echo "file version list:\n";
         foreach ($list as $key => $value) {
-            if($localVersion == $value)
-            {
+            if ($localVersion == $value) {
                 echo "\033[1;31m{$value}  is now version. \r\n\033[0m";
-            }
-            elseif($latestVersion == $value)
-            {
+            } elseif ($latestVersion == $value) {
                 echo "\033[1;32m{$value}  is latest version. \r\n\033[0m";
-            }
-            else{
-                echo $value."\n";
+            } else {
+                echo $value . "\n";
             }
 
         }
     }
-
-    public function  test()
-    {
-        VCManager::test();
-    }
-
 }
 
 $cli = new CLI();
 $command = $argv[1];
-if(!method_exists($cli,$command)){
+if (!method_exists($cli, $command)) {
     exit("I don't know '{$command}' command. Maybe you can use 'help' to get command list.");
 }
 
