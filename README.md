@@ -24,9 +24,43 @@ Larry DBVC 是一個基於PHP+MYSQL的資料庫結構版控系統，提供了網
 }
 ```
 
-###2.版控檔案儲存位置
-####/VCFiles
+###2.建立版控檔案
+在命令介面下執行：
 
+    D:\projects\DBVC>php CLI.php create
+    VCFiles\VC_1454664931.php  be created.
+
+接著可以在\VCFiles\中找到提示中的版控檔案，可以參考其它的範例檔來做編輯。
+```php
+<?php
+
+namespace VCFiles;
+
+use Lib\VersionControl\BaseFunction;
+
+class VC_1454664931 extends BaseFunction
+{
+    public function up()
+    {
+        //TODO//這裡需要回傳一段資料庫結構更新需要的sql腳本
+    }
+
+    public function down()
+    {
+        //TODO//這裡需要回傳一段資料庫結構下降需要的sql腳本
+    }
+
+    public function comment()
+    {
+        //TODO//這裡需要回傳一段此次版本更新的說明
+    }
+
+    public function author()
+    {
+        //TODO//這裡需要回傳開發者的名稱
+    }
+}
+```
 ###3.命令介面操作
 ####/CLI.php
 #####命令列表

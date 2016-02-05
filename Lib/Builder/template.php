@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: larry
- * Date: 2016/1/28
- * Time: 16:48
- */
 
 namespace VCFiles;
 
