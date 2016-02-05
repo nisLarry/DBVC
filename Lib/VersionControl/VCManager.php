@@ -107,8 +107,13 @@ class VCManager
      */
     private static function _setNowVersion()
     {
-        $result = DBManager::selectSql("SELECT vc_file FROM db_vc ORDER BY id DESC LIMIT 1;");
-        self::$_now_version = empty($result[0]['vc_file']) ? 0 : (int)$result[0]['vc_file'];
+        $result = DBManager::checkTable("db_vc");
+        if($result)
+        {
+            $result = DBManager::selectSql("SELECT vc_file FROM db_vc ORDER BY id DESC LIMIT 1;");
+            self::$_now_version = empty($result[0]['vc_file']) ? 0 : (int)$result[0]['vc_file'];
+        }
+
     }
 
     /**

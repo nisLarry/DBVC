@@ -88,6 +88,19 @@
         </div>
     </div>
 </div>
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="modal-confirm">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">版控偵測</div>
+        <div class="am-modal-bd">
+            偵測到資料庫尚未安裝版控結構，是否現在安裝？
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>否</span>
+            <span class="am-modal-btn" data-am-modal-confirm>是</span>
+        </div>
+    </div>
+</div>
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/amazeui.min.js"></script>
 
@@ -164,6 +177,25 @@
         eventBind('auto_update');
         eventBind('up');
         eventBind('down');
+
+        //檢查是否安裝版控結構
+        $.getJSON('',{c:'Admin',f:'check_dbvc'},function(json, textStatus){
+            if(json == 1){
+                return;
+            }
+            var $confirm_modal = $('#modal-confirm').modal({
+                relatedTarget: this,
+                onConfirm: function(options) {
+                    $.getJSON('',{c:'Admin',f:'install_dbvc'},function(json,textStatus){
+                        if(json == 1){
+                            alert('安裝完成');
+                            $('#versionTable').trigger('reload');
+                        }
+                    });
+                }
+            });
+            $confirm_modal.modal('open');
+        });
 
 
     });

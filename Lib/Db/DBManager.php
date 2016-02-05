@@ -49,7 +49,7 @@ class DBManager
     public static function selectSql($sql)
     {
         self::getInstance();
-        $result = self::$_db->query($sql) or die('執行SQL腳本發生錯誤'.self::$_db->error);
+        $result = self::$_db->query(strip_tags($sql)) or die('執行SQL腳本發生錯誤'.self::$_db->error);
         $result_arr = array();
 
         while($row = mysqli_fetch_assoc($result))
@@ -67,14 +67,30 @@ class DBManager
     public static function updateSql($sql)
     {
         self::getInstance();
-        $result = self::$_db->query($sql) or die(self::$_db->error);
+        $result = self::$_db->query(strip_tags($sql)) or die(self::$_db->error);
         if ($result) {
             return 1;
         } else {
             return 0;
         }
-
     }
 
+
+    /**
+     * 檢查表是否存在
+     * @param $tableName
+     * @return int
+     */
+    public static function checkTable($tableName)
+    {
+        self::getInstance();
+        $result =  self::$_db->query("SHOW TABLES LIKE '{$tableName}'");
+        $row = mysqli_fetch_assoc($result);
+        if ($row) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
 }

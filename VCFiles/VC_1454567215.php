@@ -25,7 +25,7 @@ class VC_1454567215 extends BaseFunction
 
     public function comment()
     {
-        return "user table add column \'name\'";
+        return "user table add column `name`";
     }
 
     public function author()
