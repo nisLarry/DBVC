@@ -27,7 +27,7 @@ Larry DBVC 是一個基於PHP+MYSQL的資料庫結構版控系統，提供了網
 ###2.版控檔案儲存位置
 ####/VCFiles
 
-###2.命令介面操作
+###3.命令介面操作
 ####/CLI.php
 #####命令列表
 | 命令        | 功能   |
@@ -52,7 +52,7 @@ init  : database structure initialization.
 auto_update  : up database structure to the latest version.
 ```
 
-###3.網頁介面操作
+###4.網頁介面操作
 ####/index.php
 
 #####資料庫版控安裝檢測
