@@ -10,8 +10,6 @@ Larry DBVC 是一個基於PHP+MYSQL的資料庫結構版控系統，提供了網
 ![工作流程][1]
 
 
-  [1]: https://github.com/nisLarry/DBVC/blob/master/Design/UML/workflow/workflow.png
-
 
 ##使用教學
 
@@ -26,7 +24,10 @@ Larry DBVC 是一個基於PHP+MYSQL的資料庫結構版控系統，提供了網
 }
 ```
 
-###2.命令操作
+###2.版控檔案儲存位置
+####/VCFiles
+
+###2.命令介面操作
 ####/CLI.php
 #####命令列表
 | 命令        | 功能   |
@@ -50,3 +51,22 @@ down [v_no]  : down database structure to assign version. you can enter a versio
 init  : database structure initialization.
 auto_update  : up database structure to the latest version.
 ```
+
+###3.網頁介面操作
+####/index.php
+
+#####資料庫版控安裝檢測
+![資料庫版控檢測][2]
+
+
+#####功能提示訊息
+![此处输入图片的描述][3]
+
+#####操作結果訊息
+![此处输入图片的描述][4]
+
+
+  [1]: https://github.com/nisLarry/DBVC/blob/master/Design/UML/workflow/workflow.png
+  [2]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image1.png
+  [3]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image2.png
+  [4]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image2.png
