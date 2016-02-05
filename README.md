@@ -57,7 +57,7 @@ auto_update  : up database structure to the latest version.
 
 #####資料庫版控安裝檢測
 ![資料庫版控檢測][2]
-
+按下（是）之後，就會在資料庫中新建一個db_vc資料表，來做為版控之用。
 
 #####功能提示訊息
 ![此处输入图片的描述][3]
@@ -66,7 +66,15 @@ auto_update  : up database structure to the latest version.
 ![此处输入图片的描述][4]
 
 
+###最後
+感謝大家的使用，有任何的問題，歡迎使用[issues][5]來對我提出反饋。
+
+我是[@nislarry][6]
+
+
   [1]: https://github.com/nisLarry/DBVC/blob/master/Design/UML/workflow/workflow.png
   [2]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image1.png
-  [3]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image2.png
+  [3]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image3.png
   [4]: https://github.com/nisLarry/DBVC/blob/master/Design/example/image2.png
+  [5]: https://github.com/nisLarry/DBVC/issues
+  [6]: https://github.com/nisLarry
