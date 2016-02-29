@@ -111,5 +111,5 @@ auto_update  : up database structure to the latest version.
   [2]: /Design/example/image1.png
   [3]: /Design/example/image3.png
   [4]: /Design/example/image2.png
-  [5]: http://192.168.18.19/larrynis/DBVC/issues
-  [6]: http://192.168.18.19/larrynis
+  [5]: https://github.com/nisLarry/DBVC/issues
+  [6]: https://github.com/nisLarry
