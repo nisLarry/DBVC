@@ -16,13 +16,13 @@ class AdminController
 
     public function check_dbvc()
     {
-        $result = DBManager::checkTable("db_vc");
+        $result = VCManager::check_dbvc();
         echo json_encode($result);
     }
 
     public function install_dbvc()
     {
-        $result = DBManager::updateSql("CREATE TABLE `db_vc` ( `id`  bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '版本號' , `vc_file`  varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '版本檔名稱' , `create_date`  varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '建立日期' , `create_author`  varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '建立者' , `v_comment`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '版本註解' , PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci COMMENT='資料庫版控表' AUTO_INCREMENT=4 CHECKSUM=0 ROW_FORMAT=DYNAMIC DELAY_KEY_WRITE=0 ;");
+        $result = VCManager::install_dbvc();
         echo json_encode($result);
     }
 

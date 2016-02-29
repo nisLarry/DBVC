@@ -67,6 +67,7 @@ class VC_1454664931 extends BaseFunction
 | 命令        | 功能   |
 | --------   | -----  |
 | help     | 顯示所有命令 |
+| install        |   安裝DBVC.   |
 | getlist        |   顯示所有版本檔案   |
 | create        |    建立一個新的版本檔    |
 | up          |    更新一個版本，也可以輸入一個版本號作為參數，更新到指定版本    |
